@@ -31,7 +31,7 @@ void * tobacco_paper_agent(void * arg)
 {
     int tobacco_paper_agent_count = 0;
 
-    while(1)
+    while(tobacco_paper_agent_count != 6)
     {
         // sleep for random amount of time 0-200 mS
         sleep(  (rand() % 200)  / 100   );
@@ -42,15 +42,9 @@ void * tobacco_paper_agent(void * arg)
         sem_post(&paper);
 
         tobacco_paper_agent_count++;
-
-        if(tobacco_paper_agent_count == 6)
-        {
-            printf("Tobacco and paper agent done!\n");            
-            break;
-        }
-
     }
 
+    printf("Tobacco and paper agent done!\n");         
     return 0;
 }
 
@@ -58,7 +52,7 @@ void * tobacco_match_agent(void * arg)
 {
     int tobacco_match_agent_count = 0;
 
-    while(1)
+    while(tobacco_match_agent_count != 6)
     {
         // sleep for random amount of time 0-200 mS
         sleep(  (rand() % 200)  / 100   );
@@ -70,12 +64,9 @@ void * tobacco_match_agent(void * arg)
 
         tobacco_match_agent_count++;
 
-        if(tobacco_match_agent_count == 6)
-        {
-            printf("Tobacco match agent done!\n");            
-            break;
-        }
     }
+
+    printf("Tobacco match agent done!\n");  
 
     return 0;
 }
@@ -83,7 +74,8 @@ void * tobacco_match_agent(void * arg)
 void * match_paper_agent(void * arg)
 {
     int match_paper_agent_count = 0;
-    while(1)
+    
+    while(match_paper_agent_count != 6)
     {
         // sleep for random amount of time 0-200 mS
         sleep(  (rand() % 200)  / 100   );
@@ -95,12 +87,9 @@ void * match_paper_agent(void * arg)
 
         match_paper_agent_count++;
 
-        if(match_paper_agent_count == 6)
-        {
-            printf("Match paper agent done!\n");
-            break;
-        }
     }
+
+    printf("Match paper agent done!\n");
 
     return 0;
 }
@@ -113,7 +102,7 @@ void * tobacco_pusher(void * arg)
 {
     int tobacco_pusher_count = 0;
 
-    while(1)
+    while(tobacco_pusher_count != 12)
     {
         // wait for tobacco to be generated 
         sem_wait(&tobacco);
@@ -145,13 +134,9 @@ void * tobacco_pusher(void * arg)
         // unlock mutex lock 
         pthread_mutex_unlock(&mutex);
 
-        if(tobacco_pusher_count == 12)
-        {
-            printf("Tobacco pusher done!\n");
-            break;
-        }
-
     }
+
+    printf("Tobacco pusher done!\n");
 
     return 0;
 
@@ -161,7 +146,7 @@ void * paper_pusher(void * arg)
 {
     int paper_pusher_count = 0;
 
-    while(1)
+    while(paper_pusher_count != 12)
     {
         // wait for paper to be generated 
         sem_wait(&paper);
@@ -193,14 +178,11 @@ void * paper_pusher(void * arg)
         
         // unlock mutex lock 
         pthread_mutex_unlock(&mutex);
-        
-        if(paper_pusher_count == 12)
-        {
-            printf("Paper pusher done!\n");
-            break;
-        }
+
 
     }
+
+    printf("Paper pusher done!\n");
 
     return 0;
 }
@@ -209,7 +191,7 @@ void * match_pusher(void * arg)
 {
     int match_pusher_count = 0;
 
-    while(1)
+    while(match_pusher_count != 12)
     {
         // wait for match to be generated 
         sem_wait(&match);
@@ -241,14 +223,9 @@ void * match_pusher(void * arg)
         // unlock mutex lock 
         pthread_mutex_unlock(&mutex);
 
-        if(match_pusher_count == 12)
-        {
-            printf("Match pusher done!\n");
-            break;
-        }
-
     }
 
+    printf("Match pusher done!\n");
     return 0;
 }
 
@@ -258,7 +235,7 @@ void * match_man(void * arg)
     // number of cigarettes someone has smoked
     int cigarette_count = 0; 
 
-    while(1)
+    while(cigarette_count != 3)
     {
         // wait for a pusher to tell tobacco man that the ingredients were there 
         sem_wait(&match_man_sem);
@@ -272,17 +249,9 @@ void * match_man(void * arg)
         sem_post(&agent_sem);
 
         cigarette_count++;
-
-        
-        if(cigarette_count == 3)
-        {
-            printf("\tGreat now I'm hungry!\n");
-
-            break;
-        }
-        
-        
     }
+
+    printf("\tGreat now I'm hungry!\n");
 
     return 0;
 }
@@ -292,7 +261,7 @@ void * paper_man(void * arg)
     // number of cigarettes someone has smoked
     int cigarette_count = 0; 
 
-    while(1)
+    while(cigarette_count != 3)
     {
         // wait for a pusher to tell tobacco man that the ingredients were there 
         sem_wait(&paper_man_sem);
@@ -306,17 +275,10 @@ void * paper_man(void * arg)
         sem_post(&agent_sem);
 
         cigarette_count++;
-        
-        
-        if(cigarette_count == 3)
-        {
-            printf("\tGreat now I'm hungry!\n");
-
-            break;
-        }
-    
-        
+               
     }
+
+    printf("\tGreat now I'm hungry!\n");
 
     return 0;
 }
@@ -327,7 +289,7 @@ void * tobacco_man(void * arg)
     // number of cigarettes someone has smoked
     int cigarette_count = 0; 
 
-    while(1)
+    while(cigarette_count != 3)
     {
         // wait for a pusher to tell tobacco man that the ingredients were there 
         sem_wait(&tobacco_man_sem);
@@ -341,17 +303,10 @@ void * tobacco_man(void * arg)
         sem_post(&agent_sem);
 
         cigarette_count++;
-        
-        
-        if(cigarette_count == 3)
-        {
-            printf("\tGreat now I'm hungry!\n");
 
-            break;
-        }
-        
-        
     }
+    
+    printf("\tGreat now I'm hungry!\n");
 
     return 0;
 }
@@ -369,9 +324,6 @@ int main(void)
 
     // smoker therad delcarations 
     pthread_t match_man_1_t, match_man_2_t, paper_man_1_t, paper_man_2_t, tobacco_man_1_t, tobacco_man_2_t;
-
-    // mutex lock declaration 
-    pthread_t mutex_t;
 
     // initialize semaphores 
     sem_init(&agent_sem, pshared, 1);
@@ -462,7 +414,7 @@ int main(void)
         exit(1);
     }
 
-    if(pthread_create(&tobacco_man_1_t, NULL, tobacco_man, NULL))
+    if(pthread_create(&tobacco_man_2_t, NULL, tobacco_man, NULL))
     {
         printf("Thread creation failed!");
         exit(1);
