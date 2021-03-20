@@ -28,6 +28,8 @@ sem_t mutex;
 
 void * tobacco_paper_agent(void * arg)
 {
+    int tobacco_paper_agent_count = 0;
+
     while(1)
     {
         // sleep for random amount of time 0-200 mS
@@ -37,6 +39,15 @@ void * tobacco_paper_agent(void * arg)
         
         sem_post(&tobacco);
         sem_post(&paper);
+
+        tobacco_paper_agent_count++;
+
+        if(tobacco_paper_agent_count == 6)
+        {
+            printf("Tobacco and paper agent done!\n");            
+            break;
+        }
+
     }
 
     return 0;
@@ -44,6 +55,8 @@ void * tobacco_paper_agent(void * arg)
 
 void * tobacco_match_agent(void * arg)
 {
+    int tobacco_match_agent_count = 0;
+
     while(1)
     {
         // sleep for random amount of time 0-200 mS
@@ -53,6 +66,14 @@ void * tobacco_match_agent(void * arg)
         
         sem_post(&tobacco);
         sem_post(&match);
+
+        tobacco_match_agent_count++;
+
+        if(tobacco_match_agent_count == 6)
+        {
+            printf("Tobacco match agent done!\n");            
+            break;
+        }
     }
 
     return 0;
@@ -60,6 +81,7 @@ void * tobacco_match_agent(void * arg)
 
 void * match_paper_agent(void * arg)
 {
+    int match_paper_agent_count = 0;
     while(1)
     {
         // sleep for random amount of time 0-200 mS
@@ -69,6 +91,14 @@ void * match_paper_agent(void * arg)
         
         sem_post(&match);
         sem_post(&paper);
+
+        match_paper_agent_count++;
+
+        if(match_paper_agent_count == 6)
+        {
+            printf("Match paper agent done!\n");
+            break;
+        }
     }
 
     return 0;
@@ -80,6 +110,8 @@ void * match_paper_agent(void * arg)
 
 void * tobacco_pusher(void * arg)
 {
+    int tobacco_pusher_count = 0;
+
     while(1)
     {
         // wait for tobacco to be generated 
@@ -107,8 +139,16 @@ void * tobacco_pusher(void * arg)
             TOBACCO_TABLE = 1; 
         }
         
+        tobacco_pusher_count++;
+
         // unlock mutex lock 
         sem_post(&mutex);
+
+        if(tobacco_pusher_count == 12)
+        {
+            printf("Tobacco pusher done!\n");
+            break;
+        }
 
     }
 
@@ -118,6 +158,8 @@ void * tobacco_pusher(void * arg)
 
 void * paper_pusher(void * arg)
 {
+    int paper_pusher_count = 0;
+
     while(1)
     {
         // wait for paper to be generated 
@@ -145,8 +187,17 @@ void * paper_pusher(void * arg)
             PAPER_TABLE = 1; 
         }
         
+        // increment count 
+        paper_pusher_count++;
+        
         // unlock mutex lock 
         sem_post(&mutex);
+        
+        if(paper_pusher_count == 12)
+        {
+            printf("Paper pusher done!\n");
+            break;
+        }
 
     }
 
@@ -155,6 +206,8 @@ void * paper_pusher(void * arg)
 
 void * match_pusher(void * arg)
 {
+    int match_pusher_count = 0;
+
     while(1)
     {
         // wait for match to be generated 
@@ -182,8 +235,16 @@ void * match_pusher(void * arg)
             MATCH_TABLE = 1; 
         }
         
+        match_pusher_count++;
+
         // unlock mutex lock 
         sem_post(&mutex);
+
+        if(match_pusher_count == 12)
+        {
+            printf("Match pusher done!\n");
+            break;
+        }
 
     }
 
@@ -211,14 +272,14 @@ void * match_man(void * arg)
 
         cigarette_count++;
 
-        /*
+        
         if(cigarette_count == 3)
         {
-            printf("\tGreat now I'm hungry!");
+            printf("\tGreat now I'm hungry!\n");
 
             break;
         }
-        */
+        
         
     }
 
@@ -245,14 +306,14 @@ void * paper_man(void * arg)
 
         cigarette_count++;
         
-        /*
+        
         if(cigarette_count == 3)
         {
             printf("\tGreat now I'm hungry!\n");
 
             break;
         }
-        */
+    
         
     }
 
@@ -280,14 +341,14 @@ void * tobacco_man(void * arg)
 
         cigarette_count++;
         
-        /*
+        
         if(cigarette_count == 3)
         {
             printf("\tGreat now I'm hungry!\n");
 
             break;
         }
-        */
+        
         
     }
 
