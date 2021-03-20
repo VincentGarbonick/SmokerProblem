@@ -21,8 +21,9 @@ sem_t tobacco_man_sem, paper_man_sem, match_man_sem;
 
 // misc semaphores 
 sem_t agent_sem;
-sem_t mutex;
+//sem_t mutex;
 
+pthread_mutex_t mutex;  
 
 //--------- Agents ---------------
 
@@ -118,7 +119,7 @@ void * tobacco_pusher(void * arg)
         sem_wait(&tobacco);
         
         // wait for mutex lock to unlock
-        sem_wait(&mutex);
+        pthread_mutex_lock(&mutex);
 
         if(PAPER_TABLE == 1)
         {
@@ -142,7 +143,7 @@ void * tobacco_pusher(void * arg)
         tobacco_pusher_count++;
 
         // unlock mutex lock 
-        sem_post(&mutex);
+        pthread_mutex_unlock(&mutex);
 
         if(tobacco_pusher_count == 12)
         {
@@ -166,7 +167,7 @@ void * paper_pusher(void * arg)
         sem_wait(&paper);
         
         // wait for mutex lock to unlock
-        sem_wait(&mutex);
+        pthread_mutex_lock(&mutex);
 
         if(TOBACCO_TABLE == 1)
         {
@@ -191,7 +192,7 @@ void * paper_pusher(void * arg)
         paper_pusher_count++;
         
         // unlock mutex lock 
-        sem_post(&mutex);
+        pthread_mutex_unlock(&mutex);
         
         if(paper_pusher_count == 12)
         {
@@ -214,7 +215,7 @@ void * match_pusher(void * arg)
         sem_wait(&match);
         
         // wait for mutex lock to unlock
-        sem_wait(&mutex);
+        pthread_mutex_lock(&mutex);
 
         if(PAPER_TABLE == 1)
         {
@@ -238,7 +239,7 @@ void * match_pusher(void * arg)
         match_pusher_count++;
 
         // unlock mutex lock 
-        sem_post(&mutex);
+        pthread_mutex_unlock(&mutex);
 
         if(match_pusher_count == 12)
         {
@@ -374,7 +375,11 @@ int main(void)
 
     // initialize semaphores 
     sem_init(&agent_sem, pshared, 1);
-    sem_init(&mutex, pshared, 1);
+    
+    //sem_init(&mutex, pshared, 1);
+
+    // initialize mutex 
+    pthread_mutex_init(&mutex, NULL);
 
     sem_init(&tobacco, pshared, 0);
     sem_init(&match, pshared, 0);
